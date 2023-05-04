@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', [UserController::class, 'store']);
 Route::post('/login', [UserController::class, 'login']);
 
-Route::middleware('auth:api')->group(function() {
+Route::middleware(['auth:api', 'verify.permission'])->group(function() {
     Route::post('/logout', [UserController::class, 'logout']);
     Route::apiResource('/users', UserController::class);
     Route::apiResource('/companies', CompanyController::class);
