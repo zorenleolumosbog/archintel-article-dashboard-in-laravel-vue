@@ -47,7 +47,8 @@ class ArticleController extends Controller
         $path = Storage::disk('public')->put("upload/" . Carbon::now()->toDateString() . "/" . Auth::user()->id, $file);
 
         $article = Article::create([
-            'user_id' => Auth::user()->id,
+            'writer_user_id' => $request->writer_user_id,
+            'editor_user_id' => $request->editor_user_id,
             'company_id' => $request->company_id,
             'image' => Storage::disk('public')->url($path),
             'path' => $path,
@@ -81,10 +82,6 @@ class ArticleController extends Controller
      */
     public function update(ArticleRequest $request, Article $article)
     {
-        $request->merge([
-            'user_id' => Auth::user()->id,
-        ]);
-
         $file = $request->file('image');
         if($file) {
             //Remove existing file

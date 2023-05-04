@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ArticleRequest extends FormRequest
 {
@@ -22,6 +23,20 @@ class ArticleRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'writer_user_id' => [
+                'sometimes',
+                'required',
+                Rule::exists('users', 'id')->where(function ($query) {
+                    $query->where('type', 'Writer');
+                }),
+            ],
+            'editor_user_id' => [
+                'sometimes',
+                'required',
+                Rule::exists('users', 'id')->where(function ($query) {
+                    $query->where('type', 'Editor');
+                }),
+            ],
             'company_id' => 'sometimes|required|exists:companies,id',
             'image' => 'sometimes|required|image|mimes:jpg,jpeg,png|max:15360', // limit 15mb
             'title' => 'sometimes|required|max:255',

@@ -16,7 +16,8 @@ class Article extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'user_id',
+        'writer_user_id',
+        'editor_user_id',
         'company_id',
         'image',
         'path',
@@ -38,11 +39,19 @@ class Article extends Model
     ];
 
     /**
-     * Get the user associated with the article.
+     * Get the user writer associated with the article.
      */
-    public function user(): BelongsTo
+    public function writer(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'writer_user_id');
+    }
+
+    /**
+     * Get the user editor associated with the article.
+     */
+    public function editor(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'editor_user_id');
     }
 
     /**

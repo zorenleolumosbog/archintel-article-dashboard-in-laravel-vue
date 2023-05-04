@@ -13,12 +13,11 @@ return new class extends Migration
     {
         Schema::create('articles', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')
-                ->constrained()
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
-            $table->foreignId('company_id')
-                ->constrained();
+            $table->unsignedBigInteger('writer_user_id')->nullable();
+            $table->foreign('writer_user_id')->references('id')->on('users');
+            $table->unsignedBigInteger('editor_user_id')->nullable();
+            $table->foreign('editor_user_id')->references('id')->on('users');
+            $table->foreignId('company_id')->nullable()->constrained();
             $table->string('image');
             $table->string('path');
             $table->string('title');
