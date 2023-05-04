@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('image');
             $table->string('path');
             $table->string('title');
+            $table->string('link');
             $table->timestamp('date');
             $table->text('content');
             $table->enum('status', ['For Edit', 'Published']);

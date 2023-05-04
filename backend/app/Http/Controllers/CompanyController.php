@@ -46,7 +46,8 @@ class CompanyController extends Controller
             'logo' => Storage::disk('public')->url($path),
             'path' => $path,
             'name' => $request->name,
-            'description' => $request->description
+            'description' => $request->description,
+            'status' => $request->status
         ]);
 
         return new CompanyResource($company);
@@ -84,11 +85,10 @@ class CompanyController extends Controller
                 'path' => $path
             ]);
 
-            $data = $request->except(['logo', 'path']);
-            $request->merge($data);
+           $data = $request->except(['logo', 'path']);
         }
-
-        $company->update($request->all());
+        
+        $company->update($data);
 
         return new CompanyResource($company);
     }

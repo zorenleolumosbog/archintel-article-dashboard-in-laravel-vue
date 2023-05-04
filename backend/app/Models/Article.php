@@ -21,6 +21,7 @@ class Article extends Model
         'image',
         'path',
         'title',
+        'link',
         'date',
         'content',
         'status'
