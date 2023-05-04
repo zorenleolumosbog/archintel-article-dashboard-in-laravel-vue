@@ -73,6 +73,8 @@ class CompanyController extends Controller
      */
     public function update(CompanyRequest $request, Company $company)
     {
+        $data = $request->all();
+        
         $file = $request->file('logo');
         if($file) {
             //Remove existing file

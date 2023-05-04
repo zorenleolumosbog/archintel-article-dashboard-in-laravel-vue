@@ -39,7 +39,8 @@ class ArticleRequest extends FormRequest
             ],
             'company_id' => 'sometimes|required|exists:companies,id',
             'image' => 'sometimes|required|image|mimes:jpg,jpeg,png|max:15360', // limit 15mb
-            'title' => 'sometimes|required|max:255',
+            'title' => 'sometimes|required|unique:articles,title|max:255',
+            'link' => 'sometimes|required|unique:articles,link|max:255',
             'date' => 'sometimes|required|date',
             'content' => 'sometimes|required',
             'status' => 'sometimes|required|in:For Edit,Published',

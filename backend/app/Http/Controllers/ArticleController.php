@@ -82,6 +82,8 @@ class ArticleController extends Controller
      */
     public function update(ArticleRequest $request, Article $article)
     {
+        $data = $request->all();
+
         $file = $request->file('image');
         if($file) {
             //Remove existing file
