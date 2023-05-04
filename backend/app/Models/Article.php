@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Article extends Model
 {
@@ -15,10 +16,14 @@ class Article extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'user_id',
+        'company_id',
         'image',
+        'path',
         'title',
         'date',
         'content',
+        'status'
     ];
 
     /**
@@ -30,4 +35,20 @@ class Article extends Model
         'id' => 'string',
         'date' => 'datetime',
     ];
+
+    /**
+     * Get the user associated with the article.
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the company associated with the article.
+     */
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Company::class);
+    }
 }

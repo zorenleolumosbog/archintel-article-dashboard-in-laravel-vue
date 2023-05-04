@@ -20,9 +20,11 @@ return new class extends Migration
             $table->foreignId('company_id')
                 ->constrained();
             $table->string('image');
+            $table->string('path');
             $table->string('title');
             $table->timestamp('date');
             $table->text('content');
+            $table->enum('status', ['For Edit', 'Published']);
             $table->timestamps();
         });
     }

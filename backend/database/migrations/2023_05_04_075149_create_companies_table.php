@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('companies', function (Blueprint $table) {
             $table->id();
             $table->string('logo');
+            $table->string('path');
             $table->string('name');
             $table->enum('status', ['Active', 'Inactive']);
             $table->timestamps();
