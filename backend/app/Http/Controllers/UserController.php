@@ -83,6 +83,39 @@ class UserController extends Controller
         return response(null, 204);
     }
 
+    
+    /**
+     * Login the specified resource from storage.
+     *
+     * @param  \App\Models\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        $credentials = $request->only('email', 'password');
+
+        if (Auth::attempt($credentials)) {
+            $user = User::where('email', $request->email)->first();
+            $token = $user->createToken(null);
+            
+            return response()->json([
+                'user_id' => $token->token->user_id,
+                'access_token' => $token->accessToken
+            ]);
+        }
+
+        return response()->json([
+            "error" => "invalid_grant",
+            "error_description" => "The user credentials were incorrect.",
+            "message" => "The user credentials were incorrect."
+        ]);
+    }
+
     /**
      * Logout the specified resource from storage.
      *
