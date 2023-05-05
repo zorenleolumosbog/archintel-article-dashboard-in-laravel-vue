@@ -24,9 +24,8 @@ class UserController extends Controller
                         ->orWhere('lastname', 'LIKE', '%'.$request->search.'%')
                         ->orWhere('email', 'LIKE', '%'.$request->search.'%');
                 })
-                ->when($request->date_from && $request->date_to, function ($query) use($request) {
-                    $query->whereDate('created_at', '>=', $request->date_from)
-                            ->whereDate('created_at', '<=', $request->date_to);
+                ->when($request->type, function ($query) use($request) {
+                    $query->where('type', $request->type);
                 })
                 ->orderBy('created_at', 'desc')
                 ->paginate($request->limit ? $request->limit : User::count());

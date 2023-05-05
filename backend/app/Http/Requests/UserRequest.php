@@ -24,32 +24,45 @@ class UserRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'firstname' => 'sometimes|required|max:255',
-            'lastname' => 'sometimes|required|max:255',
-            'email' => 'sometimes|email|required_with:password|unique:users|max:255',
-            'password' => 'sometimes|required_with:email|confirmed|min:8|max:255',
-            'type' => 'sometimes|required|in:Writer,Editor',
-            'status' => 'sometimes|required|in:Active,Inactive',
+        if (request()->method() == 'POST') {
+            return [
+                'firstname' => 'required|max:255',
+                'lastname' => 'required|max:255',
+                'email' => 'email|required_with:password|unique:users|max:255',
+                'password' => 'required_with:email|confirmed|min:8|max:255',
+                'type' => 'required|in:Writer,Editor',
+                'status' => 'required|in:Active,Inactive',
+            ];
+        }
 
-            'current_password' => [
-                'sometimes',
-                'required_with:new_password',
-                function ($attribute, $value, $fail) {
-                    if(!Hash::check(request()->current_password, Auth::user()->password)) {
-                        $fail(__('The :attribute is incorrect.'));
-                    }
-                },
-            ],
-            'new_password' => [
-                'sometimes',
-                'required_with:current_password',
-                'string',
-                'min:8',
-                'max:255',
-                'confirmed',
-                Rule::notIn([request()->current_password]), // ensure the new password is not the same as the current password
-            ],
-        ];
+        if (request()->method() == 'PUT') {
+            return [
+                'firstname' => 'sometimes|required|max:255',
+                'lastname' => 'sometimes|required|max:255',
+                'email' => 'sometimes|email|required_with:password|unique:users|max:255',
+                'password' => 'sometimes|required_with:email|confirmed|min:8|max:255',
+                'type' => 'sometimes|required|in:Writer,Editor',
+                'status' => 'sometimes|required|in:Active,Inactive',
+    
+                'current_password' => [
+                    'sometimes',
+                    'required_with:new_password',
+                    function ($attribute, $value, $fail) {
+                        if(!Hash::check(request()->current_password, Auth::user()->password)) {
+                            $fail(__('The :attribute is incorrect.'));
+                        }
+                    },
+                ],
+                'new_password' => [
+                    'sometimes',
+                    'required_with:current_password',
+                    'string',
+                    'min:8',
+                    'max:255',
+                    'confirmed',
+                    Rule::notIn([request()->current_password]), // ensure the new password is not the same as the current password
+                ],
+            ];
+        }
     }
 }

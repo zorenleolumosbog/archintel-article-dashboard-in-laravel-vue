@@ -22,28 +22,52 @@ class ArticleRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'writer_user_id' => [
-                'sometimes',
-                'required',
-                Rule::exists('users', 'id')->where(function ($query) {
-                    $query->where('type', 'Writer');
-                }),
-            ],
-            'editor_user_id' => [
-                'sometimes',
-                'required',
-                Rule::exists('users', 'id')->where(function ($query) {
-                    $query->where('type', 'Editor');
-                }),
-            ],
-            'company_id' => 'sometimes|required|exists:companies,id',
-            'image' => 'sometimes|required|image|mimes:jpg,jpeg,png|max:15360', // limit 15mb
-            'title' => 'sometimes|required|unique:articles,title|max:255',
-            'link' => 'sometimes|required|unique:articles,link|max:255',
-            'date' => 'sometimes|required|date',
-            'content' => 'sometimes|required',
-            'status' => 'sometimes|required|in:For Edit,Published',
-        ];
+        if (request()->method() == 'POST') {
+            return [
+                'writer_user_id' => [
+                    'nullable',
+                    Rule::exists('users', 'id')->where(function ($query) {
+                        $query->where('type', 'Writer');
+                    }),
+                ],
+                'editor_user_id' => [
+                    'nullable',
+                    Rule::exists('users', 'id')->where(function ($query) {
+                        $query->where('type', 'Editor');
+                    }),
+                ],
+                'company_id' => 'required|exists:companies,id',
+                'image' => 'required|image|mimes:jpg,jpeg,png|max:15360', // limit 15mb
+                'title' => 'required|unique:articles,title|max:255',
+                'link' => 'required|unique:articles,link|max:255',
+                'date' => 'required|date',
+                'content' => 'required',
+                'status' => 'required|in:For Edit,Published',
+            ];
+        }
+
+        if (request()->method() == 'PUT') {
+            return [
+                'writer_user_id' => [
+                    'nullable',
+                    Rule::exists('users', 'id')->where(function ($query) {
+                        $query->where('type', 'Writer');
+                    }),
+                ],
+                'editor_user_id' => [
+                    'nullable',
+                    Rule::exists('users', 'id')->where(function ($query) {
+                        $query->where('type', 'Editor');
+                    }),
+                ],
+                'company_id' => 'sometimes|required|exists:companies,id',
+                'image' => 'sometimes|required|image|mimes:jpg,jpeg,png|max:15360', // limit 15mb
+                'title' => 'sometimes|required|max:255|unique:articles,title,' . $this->route('article')->id,
+                'link' => 'sometimes|required|max:255|unique:articles,link,' . $this->route('article')->id,
+                'date' => 'sometimes|required|date',
+                'content' => 'sometimes|required',
+                'status' => 'sometimes|required|in:For Edit,Published',
+            ];
+        }
     }
 }

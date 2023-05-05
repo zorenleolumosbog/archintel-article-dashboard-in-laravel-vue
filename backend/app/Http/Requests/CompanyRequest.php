@@ -21,10 +21,20 @@ class CompanyRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'logo' => 'sometimes|required|image|mimes:jpg,jpeg,png|max:10240', // limit 10mb
-            'name' => 'sometimes|required|max:255',
-            'status' => 'sometimes|required|in:Active,Inactive',
-        ];
+        if (request()->method() == 'POST') {
+            return [
+                'logo' => 'required|image|mimes:jpg,jpeg,png|max:10240', // limit 10mb
+                'name' => 'required|max:255',
+                'status' => 'required|in:Active,Inactive',
+            ];
+        }
+
+        if (request()->method() == 'PUT') {
+            return [
+                'logo' => 'sometimes|required|image|mimes:jpg,jpeg,png|max:10240', // limit 10mb
+                'name' => 'sometimes|required|max:255',
+                'status' => 'sometimes|required|in:Active,Inactive',
+            ];
+        }
     }
 }
