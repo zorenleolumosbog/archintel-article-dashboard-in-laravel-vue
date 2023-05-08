@@ -29,7 +29,7 @@ class CompanyRequest extends FormRequest
             ];
         }
 
-        if (request()->method() == 'PUT') {
+        if (request()->method() == 'PUT' || request()->method() == 'PATCH') {
             return [
                 'logo' => 'sometimes|required|image|mimes:jpg,jpeg,png|max:10240', // limit 10mb
                 'name' => 'sometimes|required|max:255',

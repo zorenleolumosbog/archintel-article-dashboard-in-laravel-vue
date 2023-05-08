@@ -22,12 +22,16 @@ class VerifyPermission
             return $next($request);
         }
 
+        if($request->route('user')?->id != Auth::user()->id) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
         if($request->route('company')) {
-            return response()->json(['message' => 'Unauthenticated'], 401);
+            return response()->json(['message' => 'Unauthorized'], 401);
         }
 
         if($request->route('article')?->status === "Published" || $request->status === "Published") {
-            return response()->json(['message' => 'Unauthenticated'], 401);
+            return response()->json(['message' => 'Unauthorized'], 401);
         }
 
         return $next($request);

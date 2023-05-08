@@ -46,7 +46,7 @@ class ArticleRequest extends FormRequest
             ];
         }
 
-        if (request()->method() == 'PUT') {
+        if (request()->method() == 'PUT' || request()->method() == 'PATCH') {
             return [
                 'writer_user_id' => [
                     'nullable',

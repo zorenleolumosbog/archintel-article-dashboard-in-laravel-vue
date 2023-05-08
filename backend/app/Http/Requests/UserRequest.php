@@ -35,7 +35,7 @@ class UserRequest extends FormRequest
             ];
         }
 
-        if (request()->method() == 'PUT') {
+        if (request()->method() == 'PUT' || request()->method() == 'PATCH') {
             return [
                 'firstname' => 'sometimes|required|max:255',
                 'lastname' => 'sometimes|required|max:255',
