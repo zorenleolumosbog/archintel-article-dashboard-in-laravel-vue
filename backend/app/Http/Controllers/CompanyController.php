@@ -57,7 +57,6 @@ class CompanyController extends Controller
             'logo' => Storage::disk('public')->url($path),
             'path' => $path,
             'name' => $request->name,
-            'description' => $request->description,
             'status' => $request->status
         ]);
 

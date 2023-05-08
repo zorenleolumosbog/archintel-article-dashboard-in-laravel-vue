@@ -6,7 +6,7 @@ import { onMounted, reactive, watch } from "vue";
 import { useDebounceFn } from '@vueuse/core';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
-import useDate from '@/hooks/index';
+import hooks from '@/hooks/index';
 import { userAuth } from '@/stores/index';
 const authStore = userAuth();
 const router = useRouter();
@@ -35,8 +35,6 @@ const state = reactive({
   },
   validation: {
     showModal: false,
-    isAdd: false,
-    isEdit: false,
     saving: false,
     isSuccess: false,
     errors: []
@@ -50,12 +48,6 @@ onMounted(() => {
 const debouncedRecords = useDebounceFn(() => {
   getRecords();
 }, 1000);
-
-const getLocaleDateString = (dateString: string) => {
-  const { toLocaleDateString } = useDate(dateString);
-
-  return toLocaleDateString.value;
-};
 
 const getRecords = () => {
   state.records = null;
@@ -73,7 +65,7 @@ const getRecords = () => {
     }
   })
   .then((response) => {
-    state.records = response.data.data;
+    state.records = response.data;
   })
   .catch((error) => {
     router.push({name: 'dashboard'});
@@ -83,34 +75,25 @@ const getRecords = () => {
 const add = () => {
   state.formTitle = 'Add New User';
   state.validation.showModal = true;
-  state.validation.isAdd = true;
   state.validation.errors = [];
 };
 
 const edit = (id: string) => {
   state.formTitle = 'Edit User';
   state.validation.showModal = true;
-  state.validation.isEdit = true;
   state.validation.errors = [];
 
-  axios.get(`${process.env.API_URL}/users/${id}`, {
-    headers: {
-        Authorization: `Bearer ${authStore.accessToken}`,
-    }
-  })
-  .then((response) => {
-    state.selectedRecord = response.data.data;
+  state.selectedRecord = hooks.useFilterRecord('id', state.records?.data, id);
     
-    state.input = {
-      firstName: state.selectedRecord?.firstname,
-      lastName: state.selectedRecord?.lastname,
-      email: state.selectedRecord?.email,
-      password: '',
-      passwordConfirmation: '',
-      type: state.selectedRecord?.type,
-      status: state.selectedRecord?.status,
-    }
-  })
+  state.input = {
+    firstName: state.selectedRecord?.firstname,
+    lastName: state.selectedRecord?.lastname,
+    email: state.selectedRecord?.email,
+    password: '',
+    passwordConfirmation: '',
+    type: state.selectedRecord?.type,
+    status: state.selectedRecord?.status,
+  }
 };
 
 const store = () => {
@@ -191,8 +174,6 @@ const clear = () => {
   state.selectedRecord = null,
   state.validation = {
     showModal: false,
-    isAdd: false,
-    isEdit: false,
     saving: false,
     isSuccess: false,
     errors: []
@@ -233,7 +214,7 @@ const clear = () => {
               </thead>
               <tbody>
                 <template v-if="state.records">
-                  <tr v-for="record in state.records" :key="record">
+                  <tr v-for="record in state.records?.data" :key="record">
                       <td class="text-left">
                         <div @click="edit(record?.id)" class="col mdc-button" data-mdc-auto-init="MDCRipple">
                           <span class="material-symbols-outlined">edit_document</span>
@@ -243,7 +224,7 @@ const clear = () => {
                       <td class="text-left">{{ record?.lastname }}</td>
                       <td class="text-left">{{ record?.type }}</td>
                       <td class="text-left">{{ record?.status }}</td>
-                      <td class="text-left">{{ getLocaleDateString(record?.created_at) }}</td>
+                      <td class="text-left">{{ hooks.useToLocaleDateString(record?.created_at).value }}</td>
                   </tr>
                 </template>
                 <template v-else>

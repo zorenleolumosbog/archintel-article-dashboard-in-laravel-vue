@@ -1,7 +1,7 @@
 import { computed } from "vue";
 
-export default function useDate(dateString) {
-    const toLocaleDateString = computed(() => {
+const useToLocaleDateString = (dateString) => {
+    return computed(() => {
         const event = new Date(dateString);
             
         return event.toLocaleDateString(undefined, {  
@@ -10,8 +10,15 @@ export default function useDate(dateString) {
             day: 'numeric' 
         });
     });
-
-    return {
-        toLocaleDateString
-    };
 }
+
+const useFilterRecord = (key, heystack, needle) => {
+    return heystack.filter((el) => {
+        return el[key] == needle;
+    })[0];
+}
+
+export default {
+    useToLocaleDateString,
+    useFilterRecord
+};
