@@ -19,12 +19,21 @@ class ArticleController extends Controller
      */
     public function index(Request $request)
     {
-        $articles = Article::when($request->search, function ($query) use($request) {
-                    $query->where('title', 'LIKE', '%'.$request->search.'%')
-                        ->orWhere('content', 'LIKE', '%'.$request->search.'%');
+        $articles = Article::when(!$request->date_from && !$request->date_to, function ($query) use($request) {
+                    $query->when($request->search, function ($query) use($request) {
+                        $query->where('title', 'LIKE', '%'.$request->search.'%')
+                            ->orWhere('content', 'LIKE', '%'.$request->search.'%');
+                    });
                 })
-                ->when($request->date, function ($query) use($request) {
-                    $query->whereDate('date', $request->date);
+                ->when($request->date_from && $request->date_to, function ($query) use($request) {
+                    $query->whereDate('date', '>=', $request->date_from)
+                    ->whereDate('date', '<=', $request->date_to)
+                    ->when($request->search, function ($query) use($request) {
+                        $query->where(function ($query) use($request) {
+                            $query->where('title', 'LIKE', '%'.$request->search.'%')
+                                ->orWhere('content', 'LIKE', '%'.$request->search.'%');
+                        });
+                    });
                 })
                 ->when($request->status, function ($query) use($request) {
                     $query->where('status', $request->status);

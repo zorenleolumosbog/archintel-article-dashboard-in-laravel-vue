@@ -39,8 +39,8 @@ class UserRequest extends FormRequest
             return [
                 'firstname' => 'sometimes|required|max:255',
                 'lastname' => 'sometimes|required|max:255',
-                'email' => 'sometimes|email|required_with:password|unique:users|max:255',
-                'password' => 'sometimes|required_with:email|confirmed|min:8|max:255',
+                'email' => 'sometimes|email|required_with:password|max:255,|unique:users,email,' . $this->route('user')->id,
+                'password' => 'sometimes|confirmed|min:8|max:255',
                 'type' => 'sometimes|required|in:Writer,Editor',
                 'status' => 'sometimes|required|in:Active,Inactive',
     

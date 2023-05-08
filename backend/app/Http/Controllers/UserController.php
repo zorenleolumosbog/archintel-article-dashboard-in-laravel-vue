@@ -19,10 +19,25 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $users = User::when($request->search, function ($query) use($request) {
-                    $query->where('firstname', 'LIKE', '%'.$request->search.'%')
-                        ->orWhere('lastname', 'LIKE', '%'.$request->search.'%')
-                        ->orWhere('email', 'LIKE', '%'.$request->search.'%');
+        $users = User::when(!$request->date_from && !$request->date_to, function ($query) use($request) {
+                    $query->when($request->search, function ($query) use($request) {
+                        $query->where('firstname', 'LIKE', '%'.$request->search.'%')
+                            ->orWhere('lastname', 'LIKE', '%'.$request->search.'%')
+                            ->orWhere('type', 'LIKE', '%'.$request->search.'%')
+                            ->orWhere('email', 'LIKE', '%'.$request->search.'%');
+                    });
+                })
+                ->when($request->date_from && $request->date_to, function ($query) use($request) {
+                    $query->whereDate('created_at', '>=', $request->date_from)
+                    ->whereDate('created_at', '<=', $request->date_to)
+                    ->when($request->search, function ($query) use($request) {
+                        $query->where(function ($query) use($request) {
+                            $query->where('firstname', 'LIKE', '%'.$request->search.'%', )
+                                    ->orWhere('lastname', 'LIKE', '%'.$request->search.'%')
+                                    ->orWhere('type', 'LIKE', '%'.$request->search.'%')
+                                    ->orWhere('email', 'LIKE', '%'.$request->search.'%');
+                        });
+                    });
                 })
                 ->when($request->type, function ($query) use($request) {
                     $query->where('type', $request->type);

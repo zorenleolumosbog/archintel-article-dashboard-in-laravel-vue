@@ -10,8 +10,8 @@
     <teleport to="body">
         <div class="modal">
             <div class="modal-content">
-                <div v-if="!selectedRecord" class="modal-content-overlay">
-                    <h1>Loading...</h1>
+                <div v-if="props.validation.isEdit && !props.selectedRecord" class="modal-content-overlay">
+                    <h1>Please wait...</h1>
                 </div>
 
                 <span @click="$emit('cancel')" class="close">&times;</span>
@@ -24,13 +24,13 @@
                         <button @click="$emit('cancel')" type="button" class="mdc-button mdc-button--raised secondary-filled-button">
                             Cancel
                         </button>
-                        <button v-if="selectedRecord" :disabled="props.validation.saving" @click="$emit('update')" type="button" class="mdc-button mdc-button--raised">
-                            <template v-if="props.validation.saving">Updating...</template>
-                            <template v-else>Update</template>
-                        </button>
-                        <button v-else :disabled="props.validation.saving" @click="$emit('save')" type="button" class="mdc-button mdc-button--raised">
+                        <button v-if="props.validation.isAdd" :disabled="props.validation.saving" @click="$emit('store')" type="button" class="mdc-button mdc-button--raised">
                             <template v-if="props.validation.saving">Saving...</template>
                             <template v-else>Save</template>
+                        </button>
+                        <button v-if="props.validation.isEdit" :disabled="props.validation.saving" @click="$emit('update')" type="button" class="mdc-button mdc-button--raised">
+                            <template v-if="props.validation.saving">Updating...</template>
+                            <template v-else>Update</template>
                         </button>
                     </div>
                 </form>

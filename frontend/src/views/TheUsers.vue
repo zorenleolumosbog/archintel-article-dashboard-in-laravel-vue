@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import TheFormModal from '@/components/TheFormModal.vue';
-import { onMounted, reactive } from "vue";
+import TheMessageModal from '@/components/TheMessageModal.vue';
+import TheFormFilter from '@/components/TheFormFilter.vue';
+import { onMounted, reactive, watch } from "vue";
+import { useDebounceFn } from '@vueuse/core';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 import useDate from '@/hooks/index';
@@ -9,6 +12,11 @@ const authStore = userAuth();
 const router = useRouter();
 
 const state = reactive({
+  inputFilter: {
+      search: '',
+      dateFrom: '',
+      dateTo: ''
+  },
   formTitle: '',
   input: {
     firstName: '',
@@ -21,9 +29,16 @@ const state = reactive({
   },
   selectedRecord: null,
   records: null,
+  pagination: {
+      current: 1,
+      limit: 10
+  },
   validation: {
     showModal: false,
+    isAdd: false,
+    isEdit: false,
     saving: false,
+    isSuccess: false,
     errors: []
   }
 });
@@ -31,6 +46,10 @@ const state = reactive({
 onMounted(() => {
   getRecords();
 });
+
+const debouncedRecords = useDebounceFn(() => {
+  getRecords();
+}, 1000);
 
 const getLocaleDateString = (dateString: string) => {
   const { toLocaleDateString } = useDate(dateString);
@@ -44,6 +63,13 @@ const getRecords = () => {
   axios.get(`${process.env.API_URL}/users`, {
     headers: {
         Authorization: `Bearer ${authStore.accessToken}`,
+    },
+    params: {
+        page: state.pagination.current,
+        limit: state.pagination.limit,
+        search: state.inputFilter.search,
+        date_from: state.inputFilter.dateFrom,
+        date_to: state.inputFilter.dateTo
     }
   })
   .then((response) => {
@@ -57,12 +83,14 @@ const getRecords = () => {
 const add = () => {
   state.formTitle = 'Add New User';
   state.validation.showModal = true;
+  state.validation.isAdd = true;
   state.validation.errors = [];
 };
 
 const edit = (id: string) => {
   state.formTitle = 'Edit User';
   state.validation.showModal = true;
+  state.validation.isEdit = true;
   state.validation.errors = [];
 
   axios.get(`${process.env.API_URL}/users/${id}`, {
@@ -85,7 +113,7 @@ const edit = (id: string) => {
   })
 };
 
-const save = () => {
+const store = () => {
   state.validation.saving = true;
 
   axios.post(`${process.env.API_URL}/users`, {
@@ -105,6 +133,9 @@ const save = () => {
   .then((response) => {
     clear();
     getRecords();
+
+    state.formTitle = "Successfully Added."
+    state.validation.isSuccess = true;
   })
   .catch((error) => {
     state.validation.saving = false;
@@ -132,6 +163,9 @@ const update = () => {
   .then((response) => {
     clear();
     getRecords();
+
+    state.formTitle = "Successfully Updated."
+    state.validation.isSuccess = true;
   })
   .catch((error) => {
     state.validation.saving = false;
@@ -157,7 +191,10 @@ const clear = () => {
   state.selectedRecord = null,
   state.validation = {
     showModal: false,
+    isAdd: false,
+    isEdit: false,
     saving: false,
+    isSuccess: false,
     errors: []
   };
 };
@@ -179,9 +216,7 @@ const clear = () => {
                   </button>
                 </div>
                 <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-8">
-                  <input type="text" class="form-control" placeholder="Search">
-                  <input type="date" class="form-control" placeholder="Filter Date Start">
-                  <input type="date" class="form-control" placeholder="Filter Date End">
+                  <the-form-filter :inputFilter="state.inputFilter" @debouncedRecords="debouncedRecords"></the-form-filter>
                 </div>
               </div>
             </div>
@@ -222,74 +257,79 @@ const clear = () => {
         </div>
       </div>
     </div>
-
+    <the-message-modal v-if="state.validation.isSuccess" :formTitle="state.formTitle" @cancel="cancel"></the-message-modal>
     <the-form-modal v-if="state.validation.showModal" 
     :formTitle="state.formTitle" 
     :selectedRecord="state.selectedRecord"
     :validation="state.validation" 
-    @save="save" 
+    @store="store" 
     @update="update" 
     @cancel="cancel">
       <div class="mdc-layout-grid__inner">
           <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
               <label class="mdc-text-field w-100">
-                  <input v-model="state.input.email" placeholder="Email Address" type="text" class="mdc-text-field__input">
-                  <p v-for="(error, key) in state.validation.errors?.email" :key="key" class="mdc-theme--secondary text">
-                    <strong>{{ error }}</strong>
-                  </p>
+                <span>Email Address</span>
+                <input v-model="state.input.email" type="text" class="mdc-text-field__input pt-1">
+                <p v-for="(error, key) in state.validation.errors?.email" :key="key" class="mdc-theme--secondary text">
+                  <strong>{{ error }}</strong>
+                </p>
               </label>
           </div>
           <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
               <label class="mdc-text-field w-100">
-                  <input v-model="state.input.firstName" placeholder="First Name" type="text" class="mdc-text-field__input">
-                  <p v-for="(error, key) in state.validation.errors?.firstname" :key="key" class="mdc-theme--secondary text">
-                    <strong>{{ error }}</strong>
-                  </p>
+                <span>First Name</span>
+                <input v-model="state.input.firstName" type="text" class="mdc-text-field__input pt-1">
+                <p v-for="(error, key) in state.validation.errors?.firstname" :key="key" class="mdc-theme--secondary text">
+                  <strong>{{ error }}</strong>
+                </p>
               </label>
           </div>
           <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
               <label class="mdc-text-field w-100">
-                  <input v-model="state.input.lastName" placeholder="Last Name" type="text" class="mdc-text-field__input">
-                  <p v-for="(error, key) in state.validation.errors?.lastname" :key="key" class="mdc-theme--secondary text">
-                    <strong>{{ error }}</strong>
-                  </p>
+                <span>Last Name</span>
+                <input v-model="state.input.lastName" type="text" class="mdc-text-field__input pt-1">
+                <p v-for="(error, key) in state.validation.errors?.lastname" :key="key" class="mdc-theme--secondary text">
+                  <strong>{{ error }}</strong>
+                </p>
               </label>
           </div>
           <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
               <label class="mdc-text-field w-100">
-                  <input v-model="state.input.password" placeholder="Password" type="password" class="mdc-text-field__input">
-                  <p v-for="(error, key) in state.validation.errors?.password" :key="key" class="mdc-theme--secondary text">
-                    <strong>{{ error }}</strong>
-                  </p>
+                <span>Password</span>
+                <input v-model="state.input.password" type="password" class="mdc-text-field__input pt-1">
+                <p v-for="(error, key) in state.validation.errors?.password" :key="key" class="mdc-theme--secondary text">
+                  <strong>{{ error }}</strong>
+                </p>
               </label>
           </div>
           <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
               <label class="mdc-text-field w-100">
-                  <input v-model="state.input.passwordConfirmation" placeholder="Confirm Password" type="password" class="mdc-text-field__input">
+                <span>Confirm Password</span>
+                <input v-model="state.input.passwordConfirmation" type="password" class="mdc-text-field__input pt-1">
               </label>
           </div>
           <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
             <label class="mdc-text-field w-100">
-                <select v-model="state.input.type" class="mdc-text-field__input">
-                  <option value="" disabled>Select Type</option>
-                  <option value="Writer">Writer</option>
-                  <option value="Editor">Editor</option>
-                </select>
-                <p v-for="(error, key) in state.validation.errors?.type" :key="key" class="mdc-theme--secondary text">
-                  <strong>{{ error }}</strong>
-                </p>
+              <span>Select Type</span>
+              <select v-model="state.input.type" class="mdc-text-field__input pt-1">
+                <option value="Writer">Writer</option>
+                <option value="Editor">Editor</option>
+              </select>
+              <p v-for="(error, key) in state.validation.errors?.type" :key="key" class="mdc-theme--secondary text">
+                <strong>{{ error }}</strong>
+              </p>
             </label>
           </div>
           <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
             <label class="mdc-text-field w-100">
-                <select v-model="state.input.status" class="mdc-text-field__input">
-                  <option value="" disabled>Select Status</option>
-                  <option value="Active">Active</option>
-                  <option value="Inactive">Inactive</option>
-                </select>
-                <p v-for="(error, key) in state.validation.errors?.status" :key="key" class="mdc-theme--secondary text">
-                  <strong>{{ error }}</strong>
-                </p>
+              <span>Select Status</span>
+              <select v-model="state.input.status" class="mdc-text-field__input pt-1">
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+              </select>
+              <p v-for="(error, key) in state.validation.errors?.status" :key="key" class="mdc-theme--secondary text">
+                <strong>{{ error }}</strong>
+              </p>
             </label>
           </div>
       </div>
