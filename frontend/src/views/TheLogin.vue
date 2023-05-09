@@ -33,7 +33,8 @@ const login = () => {
     localStorage.setItem("userId", response.data.user_id);
     localStorage.setItem("accessToken", response.data.access_token);
 
-    router.push({name: "dashboard"});
+    // router.push({name: "dashboard"});
+    window.location.href = '/dashboard'
   })
   .catch((error) => {
       state.validation.loading = false;

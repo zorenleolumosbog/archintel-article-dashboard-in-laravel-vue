@@ -6,7 +6,8 @@ const authStore = userAuth();
 const router = useRouter();
 
 const logout = () => {
-  axios.post(`${process.env.API_URL}/logout`, {
+  axios.post(`${process.env.API_URL}/logout`, {}, 
+  {
     headers: {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
     }
