@@ -24,7 +24,7 @@ class UserRequest extends FormRequest
      */
     public function rules(): array
     {
-        if (request()->method() == 'POST') {
+        if (request()->method() === 'POST') {
             return [
                 'firstname' => 'required|max:255',
                 'lastname' => 'required|max:255',
@@ -35,7 +35,7 @@ class UserRequest extends FormRequest
             ];
         }
 
-        if (request()->method() == 'PUT' || request()->method() == 'PATCH') {
+        if (request()->method() === 'PUT' || request()->method() === 'PATCH') {
             return [
                 'firstname' => 'sometimes|required|max:255',
                 'lastname' => 'sometimes|required|max:255',

@@ -28,6 +28,9 @@ const login = () => {
       password: state.input.password,
   })
   .then((response) => {
+    authStore.setUserId(response.data.user_id);
+    authStore.setAccessToken(response.data.access_token);
+
     localStorage.setItem("userId", response.data.user_id);
     localStorage.setItem("accessToken", response.data.access_token);
 

@@ -230,6 +230,7 @@ const clear = () => {
                 </template>
               </tbody>
             </table>
+            <the-pagination></the-pagination>
           </div>
         </div>
       </div>

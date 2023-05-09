@@ -21,7 +21,7 @@ class CompanyRequest extends FormRequest
      */
     public function rules(): array
     {
-        if (request()->method() == 'POST') {
+        if (request()->method() === 'POST') {
             return [
                 'logo' => 'required|image|mimes:jpg,jpeg,png|max:10240', // limit 10mb
                 'name' => 'required|max:255',
@@ -29,7 +29,7 @@ class CompanyRequest extends FormRequest
             ];
         }
 
-        if (request()->method() == 'PUT' || request()->method() == 'PATCH') {
+        if (request()->method() === 'PUT' || request()->method() === 'PATCH') {
             return [
                 'logo' => 'sometimes|required|image|mimes:jpg,jpeg,png|max:10240', // limit 10mb
                 'name' => 'sometimes|required|max:255',

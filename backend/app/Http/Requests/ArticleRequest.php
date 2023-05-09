@@ -22,7 +22,7 @@ class ArticleRequest extends FormRequest
      */
     public function rules(): array
     {
-        if (request()->method() == 'POST') {
+        if (request()->method() === 'POST') {
             return [
                 'writer_user_id' => [
                     'nullable',
@@ -46,20 +46,8 @@ class ArticleRequest extends FormRequest
             ];
         }
 
-        if (request()->method() == 'PUT' || request()->method() == 'PATCH') {
+        if (request()->method() === 'PUT' || request()->method() === 'PATCH') {
             return [
-                'writer_user_id' => [
-                    'nullable',
-                    Rule::exists('users', 'id')->where(function ($query) {
-                        $query->where('type', 'Writer');
-                    }),
-                ],
-                'editor_user_id' => [
-                    'nullable',
-                    Rule::exists('users', 'id')->where(function ($query) {
-                        $query->where('type', 'Editor');
-                    }),
-                ],
                 'company_id' => 'sometimes|required|exists:companies,id',
                 'image' => 'sometimes|required|image|mimes:jpg,jpeg,png|max:15360', // limit 15mb
                 'title' => 'sometimes|required|max:255|unique:articles,title,' . $this->route('article')->id,
