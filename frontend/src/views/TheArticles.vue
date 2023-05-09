@@ -2,6 +2,7 @@
 import TheFormModal from '@/components/TheFormModal.vue';
 import TheMessageModal from '@/components/TheMessageModal.vue';
 import TheFormFilter from '@/components/TheFormFilter.vue';
+import ThePagination from '@/components/ThePagination.vue';
 import { onMounted, reactive, watch } from "vue";
 import { useDebounceFn } from '@vueuse/core';
 import axios from 'axios';
@@ -302,6 +303,7 @@ const clear = () => {
                 </template>
               </tbody>
             </table>
+            <the-pagination></the-pagination>
           </div>
         </div>
       </div>

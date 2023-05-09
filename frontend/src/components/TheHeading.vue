@@ -27,7 +27,7 @@ const logout = () => {
     <header class="mdc-toolbar mdc-elevation--z4 mdc-toolbar--fixed">
         <div class="mdc-toolbar__row">
           <section class="mdc-toolbar__section mdc-toolbar__section--align-start">
-            <a href="#" class="menu-toggler material-icons mdc-toolbar__menu-icon">menu</a>
+            <a href="javascript:void(0)" class="menu-toggler material-icons mdc-toolbar__menu-icon">menu</a>
             <span class="mdc-toolbar__input">
               <div class="mdc-text-field">
                 <input type="text" class="mdc-text-field__input" id="css-only-text-field-box" placeholder="Search">
@@ -41,7 +41,7 @@ const logout = () => {
               </RouterLink>
             </div>
             <div class="mdc-menu-anchor">
-              <a href="#" class="mdc-toolbar__icon toggle mdc-ripple-surface" data-toggle="dropdown" toggle-dropdown="notification-menu" data-mdc-auto-init="MDCRipple">
+              <a href="javascript:void(0)" class="mdc-toolbar__icon toggle mdc-ripple-surface" data-toggle="dropdown" toggle-dropdown="notification-menu" data-mdc-auto-init="MDCRipple">
                 <i class="material-icons">notifications</i>
                 <span class="dropdown-count">3</span>
               </a>
@@ -63,7 +63,7 @@ const logout = () => {
               </div>
             </div>
             <div class="mdc-menu-anchor">
-              <a href="#" class="mdc-toolbar__icon toggle mdc-ripple-surface" data-toggle="dropdown" toggle-dropdown="logout-menu" data-mdc-auto-init="MDCRipple">
+              <a href="javascript:void(0)" class="mdc-toolbar__icon toggle mdc-ripple-surface" data-toggle="dropdown" toggle-dropdown="logout-menu" data-mdc-auto-init="MDCRipple">
                 <i class="material-icons">settings</i>
               </a>
               <div class="mdc-simple-menu mdc-simple-menu--right" tabindex="-1" id="logout-menu">
@@ -80,7 +80,7 @@ const logout = () => {
               </div>
             </div>
             <div class="mdc-menu-anchor mr-1">
-              <a href="#" class="mdc-toolbar__icon toggle mdc-ripple-surface" data-toggle="dropdown" toggle-dropdown="history-menu" data-mdc-auto-init="MDCRipple">
+              <a href="javascript:void(0)" class="mdc-toolbar__icon toggle mdc-ripple-surface" data-toggle="dropdown" toggle-dropdown="history-menu" data-mdc-auto-init="MDCRipple">
                 <i class="material-icons">history</i>
               </a>
               <div class="mdc-simple-menu mdc-simple-menu--right" tabindex="-1" id="history-menu">
