@@ -12,9 +12,9 @@ const state = reactive({
 });
 
 onMounted(() => {
-  axios.get(`${process.env.API_URL}/users/${authStore.userId}`, {
+  axios.get(`${process.env.API_URL}/users/${localStorage.getItem("userId")}`, {
     headers: {
-        Authorization: `Bearer ${authStore.accessToken}`,
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
     }
   })
   .then((response) => {

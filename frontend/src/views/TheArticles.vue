@@ -73,7 +73,7 @@ const getRecords = () => {
 
   axios.get(`${process.env.API_URL}/articles`, {
     headers: {
-        Authorization: `Bearer ${authStore.accessToken}`,
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
     },
     params: {
       page: state.pagination.current,
@@ -96,7 +96,7 @@ const getCompanies = () => {
 
   axios.get(`${process.env.API_URL}/companies`, {
     headers: {
-        Authorization: `Bearer ${authStore.accessToken}`,
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
     }
   })
   .then((response) => {
@@ -151,7 +151,7 @@ const store = () => {
 
   axios.post(`${process.env.API_URL}/articles`, formData, {
     headers: {
-        Authorization: `Bearer ${authStore.accessToken}`,
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
     }
   })
   .then((response) => {
@@ -184,7 +184,7 @@ const update = () => {
 
   axios.post(`${process.env.API_URL}/articles/${state.selectedRecord?.id}`, formData, {
     headers: {
-      Authorization: `Bearer ${authStore.accessToken}`,
+      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
     }
   })
   .then((response) => {

@@ -116,7 +116,7 @@ class UserController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
-            $user = User::where('email', $request->email)->first();
+            $user = User::where('email', $request->email)->where('status', 'Active')->first();
             $token = $user->createToken(null);
             
             return response()->json([

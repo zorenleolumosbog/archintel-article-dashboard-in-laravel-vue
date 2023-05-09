@@ -7,7 +7,7 @@ const route = useRoute();
 </script>
 
 <template>
-  <div v-if="route.name === 'login'">
+  <div v-if="route.name === 'login' || route.name === 'register'">
     <RouterView />
   </div>
   <div v-else class="body-wrapper">

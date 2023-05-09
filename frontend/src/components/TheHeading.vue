@@ -1,5 +1,24 @@
 <script setup lang="ts">
+import axios from 'axios';
+import { useRouter } from 'vue-router';
+import { userAuth } from '../stores/index';
+const authStore = userAuth();
+const router = useRouter();
 
+const logout = () => {
+  axios.post(`${process.env.API_URL}/logout`, {
+    headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+    }
+  })
+  .then((response) => {
+    authStore.setCurrentUser(null);
+    localStorage.removeItem("userId");
+    localStorage.removeItem("accessToken");
+  });
+  
+  router.push({name: "login"});
+}
 </script>
 
 <template>
@@ -51,7 +70,7 @@
                       <i class="material-icons mdc-theme--primary mr-1">settings</i>
                       Settings
                     </li>
-                    <li class="mdc-list-item" role="menuitem" tabindex="0">
+                    <li @click="logout" class="mdc-list-item" role="menuitem" tabindex="0">
                       <i class="material-icons mdc-theme--primary mr-1">power_settings_new</i>
                       Logout
                     </li>

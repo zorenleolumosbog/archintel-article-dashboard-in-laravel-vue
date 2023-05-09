@@ -7,8 +7,6 @@ import { useDebounceFn } from '@vueuse/core';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 import hooks from '@/hooks/index';
-import { userAuth } from '@/stores/index';
-const authStore = userAuth();
 const router = useRouter();
 
 const state = reactive({
@@ -53,7 +51,7 @@ const getRecords = () => {
 
   axios.get(`${process.env.API_URL}/companies`, {
     headers: {
-        Authorization: `Bearer ${authStore.accessToken}`,
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
     },
     params: {
         page: state.pagination.current,
@@ -110,7 +108,7 @@ const store = () => {
 
   axios.post(`${process.env.API_URL}/companies`, formData, {
     headers: {
-        Authorization: `Bearer ${authStore.accessToken}`,
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
     }
   })
   .then((response) => {
@@ -139,7 +137,7 @@ const update = () => {
 
   axios.post(`${process.env.API_URL}/companies/${state.selectedRecord?.id}`, formData, {
     headers: {
-      Authorization: `Bearer ${authStore.accessToken}`,
+      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
     }
   })
   .then((response) => {

@@ -2,42 +2,56 @@
 import axios from 'axios';
 import { reactive } from 'vue';
 import { useRouter } from 'vue-router';
+import { userAuth } from '../stores/index';
+const authStore = userAuth();
 
 const state = reactive({
   input : {
     email: '',
-    password: ''
+    firstname: '',
+    lastname: '',
+    password: '',
+    passwordConfirmation: ''
   },
   validation: {
       loading: false,
-      error: {
-          message: null
-      }
+      isSuccess: false,
+      errors: []
   }
 });
 
 const router = useRouter();
 
-const redirectToRegister = () => {
-  router.push({name: "register"});
+const redirectToLogin = () => {
+  router.push({name: "login"});
 };
 
-const login = () => {
+const register = () => {
   state.validation.loading = true;
 
-  axios.post(`${process.env.API_URL}/login`, {
+  axios.post(`${process.env.API_URL}/register`, {
       email: state.input.email,
+      firstname: state.input.firstname,
+      lastname: state.input.lastname,
       password: state.input.password,
+      password_confirmation: state.input.passwordConfirmation,
+      type: "Writer",
+      status: "Active"
   })
   .then((response) => {
-    localStorage.setItem("userId", response.data.user_id);
-    localStorage.setItem("accessToken", response.data.access_token);
-
-    router.push({name: "dashboard"});
+    state.validation.isSuccess = true;
+    state.input = {
+      email: '',
+      firstname: '',
+      lastname: '',
+      password: '',
+      passwordConfirmation: ''
+    };
+    state.validation.loading = false;
   })
   .catch((error) => {
       state.validation.loading = false;
-      state.validation.error.message = error.response.data.message;
+      state.validation.errors = error.response.data.errors;
   });
 }
 </script>
@@ -53,20 +67,57 @@ const login = () => {
             <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-4">
 							<div class="mdc-card">
 								<section class="mdc-card__primary bg-white">
-                  <form @submit.prevent="login">
+                  <form @submit.prevent="register">
                     <div class="mdc-layout-grid">
-                      <p v-show="state.validation.error" class="mdc-theme--secondary text">{{ state.validation.error.message }}</p>
-            					<div class="mdc-layout-grid__inner">
+                      <div class="mdc-layout-grid__inner">
+                        <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
+                          <p v-show="state.validation.isSuccess" class="mdc-theme--primary text">
+                            <strong>Successfully Registered. <a href="javascript:void(0)" @click="redirectToLogin">Sign In Here</a></strong>
+                          </p>
+                        </div>
                         <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
                           <label class="mdc-text-field w-100">
                             <input v-model="state.input.email" placeholder="Email Address" type="text" class="mdc-text-field__input">
                             <!-- <span class="mdc-text-field__label">Email Address</span> -->
                             <div class="mdc-text-field__bottom-line"></div>
+                            <p v-for="(error, key) in state.validation.errors?.email" :key="key" class="mdc-theme--secondary text">
+                              <strong>{{ error }}</strong>
+                            </p>
+                          </label>
+            						</div>
+                        <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
+                          <label class="mdc-text-field w-100">
+                            <input v-model="state.input.firstname" placeholder="First Name" type="text" class="mdc-text-field__input">
+                            <!-- <span class="mdc-text-field__label">Email Address</span> -->
+                            <div class="mdc-text-field__bottom-line"></div>
+                            <p v-for="(error, key) in state.validation.errors?.firstname" :key="key" class="mdc-theme--secondary text">
+                              <strong>{{ error }}</strong>
+                            </p>
+                          </label>
+            						</div>
+                        <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
+                          <label class="mdc-text-field w-100">
+                            <input v-model="state.input.lastname" placeholder="Last Name" type="text" class="mdc-text-field__input">
+                            <!-- <span class="mdc-text-field__label">Email Address</span> -->
+                            <div class="mdc-text-field__bottom-line"></div>
+                            <p v-for="(error, key) in state.validation.errors?.lastname" :key="key" class="mdc-theme--secondary text">
+                              <strong>{{ error }}</strong>
+                            </p>
                           </label>
             						</div>
                         <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
                           <label class="mdc-text-field w-100">
                             <input v-model="state.input.password" placeholder="Password" type="password" class="mdc-text-field__input">
+                            <!-- <span class="mdc-text-field__label">Password</span> -->
+                            <div class="mdc-text-field__bottom-line"></div>
+                            <p v-for="(error, key) in state.validation.errors?.password" :key="key" class="mdc-theme--secondary text">
+                              <strong>{{ error }}</strong>
+                            </p>
+                          </label>
+            						</div>
+                        <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
+                          <label class="mdc-text-field w-100">
+                            <input v-model="state.input.passwordConfirmation" placeholder="Confirm Password" type="password" class="mdc-text-field__input">
                             <!-- <span class="mdc-text-field__label">Password</span> -->
                             <div class="mdc-text-field__bottom-line"></div>
                           </label>
@@ -94,12 +145,12 @@ const login = () => {
                               Loading...
                             </template>
                             <template v-else>
-                              Login
+                              Register
                             </template>
                           </button>
                         </div>
                         <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
-                          <p>Not Registered? <a href="javascript:void(0)" @click="redirectToRegister">Sign Up Here</a></p>
+                          <p>Already have an account? <a href="javascript:void(0)" @click="redirectToLogin">Sign In Here</a></p>
                         </div>
             					</div>
             				</div>
