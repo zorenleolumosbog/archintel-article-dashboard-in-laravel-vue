@@ -1,9 +1,12 @@
 <script setup lang="ts">
-    const props = defineProps([
-        'formTitle',
-        'selectedRecord',
-        'validation'
-    ]);
+import { userAuth } from '@/stores/index';
+const authStore = userAuth();
+
+const props = defineProps([
+  'formTitle',
+  'selectedRecord',
+  'validation'
+]);
 </script>
 
 <template>
@@ -21,12 +24,17 @@
                             Cancel
                         </button>
                         <button v-if="selectedRecord" :disabled="props.validation.saving" @click="$emit('update')" type="button" class="mdc-button mdc-button--raised">
-                            <template v-if="props.validation.saving">Updating...</template>
-                            <template v-else>Update</template>
+                            <template v-if="props.validation.saving">Saving...</template>
+                            <template v-else>Save</template>
                         </button>
                         <button v-else :disabled="props.validation.saving" @click="$emit('store')" type="button" class="mdc-button mdc-button--raised">
                             <template v-if="props.validation.saving">Saving...</template>
                             <template v-else>Save</template>
+                        </button>
+                        <button v-show="authStore.currentUser?.type === 'Editor' && selectedRecord?.status === 'For Edit'" 
+                        :disabled="props.validation.publishing" @click="$emit('update', 'Published')" type="button" class="mdc-button mdc-button--raised">
+                            <template v-if="props.validation.publishing">Publishing...</template>
+                            <template v-else>Publish</template>
                         </button>
                     </div>
                 </form>

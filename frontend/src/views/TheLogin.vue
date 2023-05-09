@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useDebounceFn } from '@vueuse/core';
 import axios from 'axios';
 import { reactive } from 'vue';
 import { useRouter } from 'vue-router';
@@ -22,6 +23,10 @@ const redirectToRegister = () => {
   router.push({name: "register"});
 };
 
+const debouncedDashboard = useDebounceFn(() => {
+  window.location.href = "/dashboard";
+}, 500);
+
 const login = () => {
   state.validation.loading = true;
 
@@ -34,7 +39,7 @@ const login = () => {
     localStorage.setItem("accessToken", response.data.access_token);
 
     // router.push({name: "dashboard"});
-    window.location.href = '/dashboard'
+    debouncedDashboard();
   })
   .catch((error) => {
       state.validation.loading = false;

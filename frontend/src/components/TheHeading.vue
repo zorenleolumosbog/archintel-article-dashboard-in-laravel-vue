@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import axios from 'axios';
+import { RouterLink } from 'vue-router';
 import { useRouter } from 'vue-router';
 import { userAuth } from '../stores/index';
 const authStore = userAuth();
@@ -35,9 +36,9 @@ const logout = () => {
           </section>
           <section class="mdc-toolbar__section mdc-toolbar__section--align-end" role="toolbar">
             <div class="mdc-menu-anchor">
-              <a href="#" class="mdc-toolbar__icon mdc-ripple-surface" data-mdc-auto-init="MDCRipple">
+              <RouterLink to="/dashboard" class="mdc-toolbar__icon mdc-ripple-surface" data-mdc-auto-init="MDCRipple">
                 <i class="material-icons">dvr</i>
-              </a>
+              </RouterLink>
             </div>
             <div class="mdc-menu-anchor">
               <a href="#" class="mdc-toolbar__icon toggle mdc-ripple-surface" data-toggle="dropdown" toggle-dropdown="notification-menu" data-mdc-auto-init="MDCRipple">
@@ -79,18 +80,18 @@ const logout = () => {
               </div>
             </div>
             <div class="mdc-menu-anchor mr-1">
-              <a href="#" class="mdc-toolbar__icon toggle mdc-ripple-surface" data-toggle="dropdown" toggle-dropdown="logout-menu" data-mdc-auto-init="MDCRipple">
+              <a href="#" class="mdc-toolbar__icon toggle mdc-ripple-surface" data-toggle="dropdown" toggle-dropdown="history-menu" data-mdc-auto-init="MDCRipple">
                 <i class="material-icons">history</i>
               </a>
-              <div class="mdc-simple-menu mdc-simple-menu--right" tabindex="-1" id="logout-menu">
+              <div class="mdc-simple-menu mdc-simple-menu--right" tabindex="-1" id="history-menu">
                   <ul class="mdc-simple-menu__items mdc-list" role="menu" aria-hidden="true">
                     <li class="mdc-list-item" role="menuitem" tabindex="0">
-                      <i class="material-icons mdc-theme--primary mr-1">settings</i>
-                      Settings
+                      <i class="material-icons mdc-theme--primary mr-1">history</i>
+                      Revision here
                     </li>
                     <li class="mdc-list-item" role="menuitem" tabindex="0">
-                      <i class="material-icons mdc-theme--primary mr-1">power_settings_new</i>
-                      Logout
+                      <i class="material-icons mdc-theme--primary mr-1">history</i>
+                      Revision here
                     </li>
                   </ul>
               </div>

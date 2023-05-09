@@ -40,6 +40,7 @@ const state = reactive({
   validation: {
     showModal: false,
     saving: false,
+    publishing: false,
     isSuccess: false,
     errors: []
   }
@@ -167,8 +168,12 @@ const store = () => {
   });
 };
 
-const update = () => {
-  state.validation.saving = true;
+const update = (status = 'For Edit') => {
+  if(status === 'Published') {
+    state.validation.publishing = true;
+  } else {
+    state.validation.saving = true;
+  }
 
   const formData = new FormData();
   formData.append('_method', 'PUT');
@@ -177,7 +182,7 @@ const update = () => {
   formData.append('link', state.input.link);
   formData.append('date', state.input.date);
   formData.append('content', state.input.content);
-  formData.append('status', state.input.status);
+  formData.append('status', status);
   if(state.input.file.icon) {
     formData.append('image', state.input.file.icon);
   }
@@ -195,7 +200,11 @@ const update = () => {
     state.validation.isSuccess = true;
   })
   .catch((error) => {
-    state.validation.saving = false;
+    if(status === 'Published') {
+      state.validation.publishing = true;
+    } else {
+      state.validation.saving = true;
+    }
     state.validation.errors = error.response.data.errors;
   });
 };
@@ -212,7 +221,7 @@ const clear = () => {
     link: '',
     date: '',
     content: '',
-    status: '',
+    status: 'For Edit',
     file: {
       src: '',
       icon: null
@@ -222,6 +231,7 @@ const clear = () => {
   state.validation = {
     showModal: false,
     saving: false,
+    publishing: false,
     isSuccess: false,
     errors: []
   };
@@ -292,7 +302,6 @@ const clear = () => {
                 </template>
               </tbody>
             </table>
-            <the-pagination></the-pagination>
           </div>
         </div>
       </div>
@@ -350,7 +359,7 @@ const clear = () => {
           <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
               <label class="mdc-text-field w-100">
                 <span>Date</span>
-                <input v-model="state.input.date" type="date" class="mdc-text-field__input pt-1">
+                <input v-model="state.input.date" type="datetime-local" class="mdc-text-field__input pt-1">
                 <p v-for="(error, key) in state.validation.errors?.date" :key="key" class="mdc-theme--secondary text">
                   <strong>{{ error }}</strong>
                 </p>
@@ -364,18 +373,6 @@ const clear = () => {
                   <strong>{{ error }}</strong>
                 </p>
               </label>
-          </div>
-          <div v-show="authStore.currentUser.type === 'Editor'" class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
-            <label class="mdc-text-field w-100">
-              <span>Select Status</span>
-              <select v-model="state.input.status" class="mdc-text-field__input pt-1">
-                <option value="For Edit">For Edit</option>
-                <option value="Published">Published</option>
-              </select>
-              <p v-for="(error, key) in state.validation.errors?.status" :key="key" class="mdc-theme--secondary text">
-                <strong>{{ error }}</strong>
-              </p>
-            </label>
           </div>
       </div>
     </the-form-modal>

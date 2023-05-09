@@ -12,18 +12,19 @@ const state = reactive({
 });
 
 onMounted(() => {
-  axios.get(`${process.env.API_URL}/users/${localStorage.getItem("userId")}`, {
-    headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-    }
-  })
-  .then((response) => {
-    authStore.setCurrentUser(response.data.data);
-    state.currentUser = response.data.data;
-  })
-  .catch((error) => {
-    router.push({name: 'login'});
-  });
+  if(localStorage.getItem("userId"))
+    axios.get(`${process.env.API_URL}/users/${localStorage.getItem("userId")}`, {
+      headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      }
+    })
+    .then((response) => {
+      authStore.setCurrentUser(response.data.data);
+      state.currentUser = response.data.data;
+    })
+    .catch((error) => {
+      router.push({name: 'login'});
+    });
 });
 
 const name = computed(() => {
@@ -47,13 +48,13 @@ const name = computed(() => {
             <div class="mdc-expansion-panel" id="ui-sub-menu">
               <nav class="mdc-list mdc-drawer-submenu">
                 <div class="mdc-list-item mdc-drawer-item">
-                  <a class="mdc-drawer-link" href="pages/ui-features/buttons.html">
-                    Buttons
+                  <a class="mdc-drawer-link" href="#">
+                    Text here
                   </a>
                 </div>
                 <div class="mdc-list-item mdc-drawer-item">
-                  <a class="mdc-drawer-link" href="pages/ui-features/typography.html">
-                    Typography
+                  <a class="mdc-drawer-link" href="#">
+                    Text here
                   </a>
                 </div>
               </nav>

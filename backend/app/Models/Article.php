@@ -35,7 +35,6 @@ class Article extends Model
      */
     protected $casts = [
         'id' => 'string',
-        'date' => 'datetime',
     ];
 
     /**
