@@ -61,4 +61,25 @@ class Article extends Model
     {
         return $this->belongsTo(Company::class);
     }
+
+    /**
+     * Scope a query to only search users.
+     */
+    public function scopeSearch($query, $request): void
+    {
+        $query->where('title', 'LIKE', '%'.$request->search.'%')
+            ->orWhere('status', 'LIKE', '%'.$request->search.'%')
+            ->orWhere('content', 'LIKE', '%'.$request->search.'%')
+            ->orWhereHas('company', function($query) use($request){
+                $query->where('name', 'LIKE', '%'.$request->search.'%');
+            })
+            ->orWhereHas('writer', function($query) use($request){
+                $query->where('firstname', 'LIKE', '%'.$request->search.'%')
+                    ->orWhere('lastname', 'LIKE', '%'.$request->search.'%');
+            })
+            ->orWhereHas('editor', function($query) use($request){
+                $query->where('firstname', 'LIKE', '%'.$request->search.'%')
+                    ->orWhere('lastname', 'LIKE', '%'.$request->search.'%');
+            });
+    }
 }

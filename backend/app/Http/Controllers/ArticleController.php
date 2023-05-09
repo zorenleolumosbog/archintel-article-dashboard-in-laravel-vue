@@ -21,8 +21,7 @@ class ArticleController extends Controller
     {
         $articles = Article::when(!$request->date_from && !$request->date_to, function ($query) use($request) {
                     $query->when($request->search, function ($query) use($request) {
-                        $query->where('title', 'LIKE', '%'.$request->search.'%')
-                            ->orWhere('content', 'LIKE', '%'.$request->search.'%');
+                        $query->search($request);
                     });
                 })
                 ->when($request->date_from && $request->date_to, function ($query) use($request) {
@@ -30,8 +29,7 @@ class ArticleController extends Controller
                     ->whereDate('date', '<=', $request->date_to)
                     ->when($request->search, function ($query) use($request) {
                         $query->where(function ($query) use($request) {
-                            $query->where('title', 'LIKE', '%'.$request->search.'%')
-                                ->orWhere('content', 'LIKE', '%'.$request->search.'%');
+                            $query->search($request);
                         });
                     });
                 })
