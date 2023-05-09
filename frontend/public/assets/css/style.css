@@ -17976,6 +17976,9 @@ address p {
 .table.table-striped tbody tr:nth-child(odd) {
   background: #EEEEEE;
 }
+.mdc-card.table-responsive {
+    overflow: auto;
+}
 /* Dropdown */
 .mdc-simple-menu--right {
   top: 100% !important;
