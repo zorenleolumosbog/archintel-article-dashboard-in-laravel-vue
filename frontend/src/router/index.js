@@ -5,10 +5,17 @@ import TheDashboard from '@/views/TheDashboard.vue'
 import TheUsers from '@/views/TheUsers.vue'
 import TheCompanies from '@/views/TheCompanies.vue'
 import TheArticles from '@/views/TheArticles.vue'
+import NotFound from '@/views/NotFound.vue'
+import axios from 'axios';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    { 
+      path: '/:pathMatch(.*)*', 
+      name: 'nout-found', 
+      component: NotFound 
+    },
     {
       path: '/',
       name: 'login',
