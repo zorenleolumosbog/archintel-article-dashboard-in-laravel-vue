@@ -9,7 +9,7 @@ Nodejs is required
 
 #### Run this command to your terminal to clone the repo
 ```
-git clone https://github.com/zorenleolumosbog/archintel-article-dashboard-in-laravel-vue.git
+git clone https://github.com/zorenleolumosbog/archintel-article-dashboard-in-laravel-vue.git . 
 ```
 
 ### Open the backend folder
