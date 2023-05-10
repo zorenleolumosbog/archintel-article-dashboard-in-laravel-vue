@@ -241,7 +241,7 @@ const clear = () => {
                 </template>
               </tbody>
             </table>
-            <the-pagination v-if="state.records" :records="state.records" :pagination="state.pagination" @getRecords="getRecords" @currentPage="currentPage"></the-pagination>
+            <the-pagination v-if="state.records?.data.length > 0" :records="state.records" :pagination="state.pagination" @getRecords="getRecords" @currentPage="currentPage"></the-pagination>
           </div>
         </div>
       </div>
@@ -257,7 +257,7 @@ const clear = () => {
       <div class="mdc-layout-grid__inner">
           <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
               <label class="mdc-text-field w-100">
-                <span>Email Address</span>
+                <strong>Email Address</strong>
                 <input v-model="state.input.email" type="text" class="mdc-text-field__input pt-1">
                 <p v-for="(error, key) in state.validation.errors?.email" :key="key" class="mdc-theme--secondary text">
                   <strong>{{ error }}</strong>
@@ -266,7 +266,7 @@ const clear = () => {
           </div>
           <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
               <label class="mdc-text-field w-100">
-                <span>First Name</span>
+                <strong>First Name</strong>
                 <input v-model="state.input.firstName" type="text" class="mdc-text-field__input pt-1">
                 <p v-for="(error, key) in state.validation.errors?.firstname" :key="key" class="mdc-theme--secondary text">
                   <strong>{{ error }}</strong>
@@ -275,7 +275,7 @@ const clear = () => {
           </div>
           <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
               <label class="mdc-text-field w-100">
-                <span>Last Name</span>
+                <strong>Last Name</strong>
                 <input v-model="state.input.lastName" type="text" class="mdc-text-field__input pt-1">
                 <p v-for="(error, key) in state.validation.errors?.lastname" :key="key" class="mdc-theme--secondary text">
                   <strong>{{ error }}</strong>
@@ -284,7 +284,7 @@ const clear = () => {
           </div>
           <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
               <label class="mdc-text-field w-100">
-                <span>Password</span>
+                <strong>Password</strong>
                 <input v-model="state.input.password" type="password" class="mdc-text-field__input pt-1">
                 <p v-for="(error, key) in state.validation.errors?.password" :key="key" class="mdc-theme--secondary text">
                   <strong>{{ error }}</strong>
@@ -293,13 +293,13 @@ const clear = () => {
           </div>
           <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
               <label class="mdc-text-field w-100">
-                <span>Confirm Password</span>
+                <strong>Confirm Password</strong>
                 <input v-model="state.input.passwordConfirmation" type="password" class="mdc-text-field__input pt-1">
               </label>
           </div>
           <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
             <label class="mdc-text-field w-100">
-              <span>Select Type</span>
+              <strong>Select Type</strong>
               <select v-model="state.input.type" class="mdc-text-field__input pt-1">
                 <option value="Writer">Writer</option>
                 <option value="Editor">Editor</option>
@@ -311,7 +311,7 @@ const clear = () => {
           </div>
           <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
             <label class="mdc-text-field w-100">
-              <span>Select Status</span>
+              <strong>Select Status</strong>
               <select v-model="state.input.status" class="mdc-text-field__input pt-1">
                 <option value="Active">Active</option>
                 <option value="Inactive">Inactive</option>

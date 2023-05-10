@@ -108,7 +108,7 @@ const getForPublishedRecords = () => {
                 </template>
               </tbody>
             </table>
-            <the-pagination v-if="state.forEditRecords" :records="state.forEditRecords" :pagination="state.forEditPagination" @getRecords="getForEditRecords" @currentPage="currentPageForEdit"></the-pagination>
+            <the-pagination v-if="state.forEditRecords?.data.length > 0" :records="state.forEditRecords" :pagination="state.forEditPagination" @getRecords="getForEditRecords" @currentPage="currentPageForEdit"></the-pagination>
           </div>
         </div>
       </div>
@@ -148,7 +148,7 @@ const getForPublishedRecords = () => {
                 </template>
               </tbody>
             </table>
-            <the-pagination v-if="state.forPublishedRecords" :records="state.forPublishedRecords" :pagination="state.forPublishedPagination" @getRecords="getForPublishedRecords" @currentPage="currentPageForPubished"></the-pagination>
+            <the-pagination v-if="state.forPublishedRecords?.data.length > 0" :records="state.forPublishedRecords" :pagination="state.forPublishedPagination" @getRecords="getForPublishedRecords" @currentPage="currentPageForPubished"></the-pagination>
           </div>
         </div>
       </div>

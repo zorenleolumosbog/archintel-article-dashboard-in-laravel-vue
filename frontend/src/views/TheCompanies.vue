@@ -237,7 +237,7 @@ const clear = () => {
                 </template>
               </tbody>
             </table>
-            <the-pagination v-if="state.records" :records="state.records" :pagination="state.pagination" @getRecords="getRecords" @currentPage="currentPage"></the-pagination>
+            <the-pagination v-if="state.records?.data.length > 0" :records="state.records" :pagination="state.pagination" @getRecords="getRecords" @currentPage="currentPage"></the-pagination>
           </div>
         </div>
       </div>
@@ -253,7 +253,7 @@ const clear = () => {
       <div class="mdc-layout-grid__inner">
           <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
               <label class="mdc-text-field w-100">
-                <span>Logo</span>
+                <strong>Logo</strong>
                 <input @change="handleFileIcon" type="file" ref="front" id="file" accept="image/png, image/gif, image/jpeg" class="mdc-text-field__input pt-1">
                 <p v-for="(error, key) in state.validation.errors?.logo" :key="key" class="mdc-theme--secondary text">
                   <strong>{{ error }}</strong>
@@ -262,7 +262,7 @@ const clear = () => {
           </div>
           <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
               <label class="mdc-text-field w-100">
-                <span>Name</span>
+                <strong>Name</strong>
                 <input v-model="state.input.name" type="text" class="mdc-text-field__input pt-1">
                 <p v-for="(error, key) in state.validation.errors?.name" :key="key" class="mdc-theme--secondary text">
                   <strong>{{ error }}</strong>
@@ -271,7 +271,7 @@ const clear = () => {
           </div>
           <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
             <label class="mdc-text-field w-100">
-              <span>Select Status</span>
+              <strong>Select Status</strong>
               <select v-model="state.input.status" class="mdc-text-field__input pt-1">
                 <option value="Active">Active</option>
                 <option value="Inactive">Inactive</option>

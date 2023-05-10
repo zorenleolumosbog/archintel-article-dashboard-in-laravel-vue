@@ -101,8 +101,6 @@ const getRecords = () => {
 };
 
 const getCompanies = () => {
-  state.records = null;
-
   axios.get(`${process.env.API_URL}/companies`, {
     headers: {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -317,7 +315,7 @@ const clear = () => {
                 </template>
               </tbody>
             </table>
-            <the-pagination v-if="state.records" :records="state.records" :pagination="state.pagination" @getRecords="getRecords" @currentPage="currentPage"></the-pagination>
+            <the-pagination v-if="state.records?.data.length > 0" :records="state.records" :pagination="state.pagination" @getRecords="getRecords" @currentPage="currentPage"></the-pagination>
           </div>
         </div>
       </div>
@@ -326,6 +324,7 @@ const clear = () => {
     <the-form-modal v-if="state.validation.showModal" 
     :formTitle="state.formTitle" 
     :selectedRecord="state.selectedRecord"
+    :publishable="true" 
     :validation="state.validation" 
     @store="store" 
     @update="update" 
@@ -333,19 +332,19 @@ const clear = () => {
       <div class="mdc-layout-grid__inner">
           <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
             <label class="mdc-text-field w-100">
-              <span>Select Company</span>
+              <strong>Select Company</strong>
               <select v-model="state.input.companyId" class="mdc-text-field__input pt-1">
                 <option disabled></option>
                 <option v-for="company in state.companies?.data" :key="company" :value="company.id">{{ company.name }}</option>
               </select>
-              <p v-for="(error, key) in state.validation.errors?.status" :key="key" class="mdc-theme--secondary text">
+              <p v-for="(error, key) in state.validation.errors?.company_id" :key="key" class="mdc-theme--secondary text">
                 <strong>{{ error }}</strong>
               </p>
             </label>
           </div>
           <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
               <label class="mdc-text-field w-100">
-                <span>Image</span>
+                <strong>Image</strong>
                 <hr>
                 <img :src="state.input.file.src ? state.input.file.src : 'https://via.placeholder.com/100'" width="100"/>
                 <input @change="handleFileIcon" type="file" ref="front" id="file" accept="image/png, image/gif, image/jpeg" class="mdc-text-field__input pt-1">
@@ -356,7 +355,7 @@ const clear = () => {
           </div>
           <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
               <label class="mdc-text-field w-100">
-                <span>Title</span>
+                <strong>Title</strong>
                 <input @keydown="generageLink" v-model="state.input.title" type="text" class="mdc-text-field__input pt-1">
                 <p v-for="(error, key) in state.validation.errors?.title" :key="key" class="mdc-theme--secondary text">
                   <strong>{{ error }}</strong>
@@ -365,7 +364,7 @@ const clear = () => {
           </div>
           <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
               <label class="mdc-text-field w-100">
-                <span>Link</span>
+                <strong>Link</strong>
                 <input v-model="state.input.link" type="text" class="mdc-text-field__input pt-1">
                 <p v-for="(error, key) in state.validation.errors?.link" :key="key" class="mdc-theme--secondary text">
                   <strong>{{ error }}</strong>
@@ -374,7 +373,7 @@ const clear = () => {
           </div>
           <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
               <label class="mdc-text-field w-100">
-                <span>Date</span>
+                <strong>Date</strong>
                 <input v-model="state.input.date" type="datetime-local" class="mdc-text-field__input pt-1">
                 <p v-for="(error, key) in state.validation.errors?.date" :key="key" class="mdc-theme--secondary text">
                   <strong>{{ error }}</strong>
@@ -383,8 +382,9 @@ const clear = () => {
           </div>
           <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
               <label class="mdc-text-field w-100">
-                <span>Content</span>
-                <textarea v-model="state.input.content" rows="10" class="mdc-text-field__input pt-1"></textarea>
+                <strong>Content</strong>
+                <hr>
+                <jodit-editor v-model="state.input.content" :height="600" class="mdc-text-field__input pt-1" />
                 <p v-for="(error, key) in state.validation.errors?.content" :key="key" class="mdc-theme--secondary text">
                   <strong>{{ error }}</strong>
                 </p>
