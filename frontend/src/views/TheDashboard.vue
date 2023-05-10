@@ -1,9 +1,76 @@
 <script setup lang="ts">
-import { onMounted } from "vue";
+import ThePagination from '@/components/ThePagination.vue';
+import axios from 'axios';
+import { onMounted, reactive } from "vue";
+
+const state = reactive({
+  forEditRecords: null,
+  forPublishedRecords: null,
+  forEditPagination: {
+      current: 1,
+      limit: 10
+  },
+  forPublishedPagination: {
+      current: 1,
+      limit: 10
+  },
+  validation: {
+    isLoadingRecords: false
+  }
+});
 
 onMounted(() => {
-  
+  getForEditRecords();
+  getForPublishedRecords();
 });
+
+const currentPageForEdit = (val: number) => {
+    state.forEditPagination.current = val;
+    getForEditRecords();
+};
+
+const currentPageForPubished = (val: number) => {
+    state.forPublishedPagination.current = val;
+    getForPublishedRecords();
+};
+
+const getForEditRecords = () => {
+  state.validation.isLoadingRecords = true;
+
+  axios.get(`${process.env.API_URL}/articles`, {
+    headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+    },
+    params: {
+      page: state.forEditPagination.current,
+      limit: state.forEditPagination.limit,
+      status: 'For Edit'
+    }
+  })
+  .then((response) => {
+    state.forEditRecords = response.data;
+    state.validation.isLoadingRecords = false;
+  });
+};
+
+const getForPublishedRecords = () => {
+  state.validation.isLoadingRecords = true;
+
+  axios.get(`${process.env.API_URL}/articles`, {
+    headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+    },
+    params: {
+      page: state.forPublishedPagination.current,
+      limit: state.forPublishedPagination.limit,
+      status: 'Published'
+    }
+  })
+  .then((response) => {
+    state.forPublishedRecords = response.data;
+    state.validation.isLoadingRecords = false;
+  });
+};
 </script>
 
 <template>
@@ -12,58 +79,36 @@ onMounted(() => {
         <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
           <div class="mdc-card table-responsive">
             <div class="table-heading px-2 px-1 border-bottom">
-              <h1 class="mdc-card__title mdc-card__title--large">For Edit</h1>
+              <h1 class="mdc-card__title mdc-card__title--large">For Articles</h1>
             </div>
             <table class="table">
               <thead>
                 <tr>
-                  <th class="text-left">Product</th>
-                  <th>Cost</th>
-                  <th>Sales amount</th>
-                  <th>Shipping cost</th>
-                  <th>Units sold</th>
-                  <th>Profit generated</th>
-                  <th>Left in stock</th>
-                  <th>Returns</th>
-                  <th>Actions</th>
+                  <th class="text-left">Image</th>
+                  <th class="text-left">Title</th>
+                  <th class="text-left">Link</th>
+                  <th class="text-left">Writer</th>
+                  <th class="text-left">Editor</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td class="text-left">T-shirts</td>
-                  <td>250</td>
-                  <td>300</td>
-                  <td>60</td>
-                  <td>3453</td>
-                  <td>76</td>
-                  <td>453643</td>
-                  <td>300</td>
-                  <td><div class="col mdc-button" data-mdc-auto-init="MDCRipple"><i class="mdi mdi-heart text-blue"></i></div><div class="col mdc-button" data-mdc-auto-init="MDCRipple"><i class="mdi mdi-forum text-yellow"></i></div><div class="col mdc-button" data-mdc-auto-init="MDCRipple"><i class="mdi mdi-delete text-red"></i></div></td>
-                </tr>
-                <tr>
-                  <td class="text-left">Baseball Hat</td>
-                  <td>457</td>
-                  <td>204</td>
-                  <td>35</td>
-                  <td>6754</td>
-                  <td>35</td>
-                  <td>345623</td>
-                  <td>546</td>
-                  <td><div class="col mdc-button" data-mdc-auto-init="MDCRipple"><i class="mdi mdi-heart text-blue"></i></div><div class="col mdc-button" data-mdc-auto-init="MDCRipple"><i class="mdi mdi-forum text-yellow"></i></div><div class="col mdc-button" data-mdc-auto-init="MDCRipple"><i class="mdi mdi-delete text-red"></i></div></td>
-                </tr>
-                <tr>
-                  <td class="text-left">Tennis Racket</td>
-                  <td>250</td>
-                  <td>350</td>
-                  <td>38</td>
-                  <td>3289</td>
-                  <td>45</td>
-                  <td>54662</td>
-                  <td>278</td>
-                  <td><div class="col mdc-button" data-mdc-auto-init="MDCRipple"><i class="mdi mdi-heart text-blue"></i></div><div class="col mdc-button" data-mdc-auto-init="MDCRipple"><i class="mdi mdi-forum text-yellow"></i></div><div class="col mdc-button" data-mdc-auto-init="MDCRipple"><i class="mdi mdi-delete text-red"></i></div></td>
-                </tr>
+                <template v-if="state.validation.isLoadingRecords">
+                  <tr>
+                    <td colspan="3" class="text-center"><h3>Loading...</h3></td>
+                  </tr>
+                </template>
+                <template v-else>
+                  <tr v-for="record in state.forEditRecords?.data" :key="record">
+                      <td class="text-left"><img :src="record?.image" width="30"/></td>
+                      <td class="text-left">{{ record?.title }}</td>
+                      <td class="text-left">{{ record?.link }}</td>
+                      <td class="text-left">{{ record?.writer?.firstname }} {{ record?.writer?.lastname }}</td>
+                      <td class="text-left">{{ record?.editor?.firstname }} {{ record?.editor?.lastname }}</td>
+                  </tr>
+                </template>
               </tbody>
             </table>
+            <the-pagination v-if="state.forEditRecords" :records="state.forEditRecords" :pagination="state.forEditPagination" @getRecords="getForEditRecords" @currentPage="currentPageForEdit"></the-pagination>
           </div>
         </div>
       </div>
@@ -74,58 +119,36 @@ onMounted(() => {
         <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
           <div class="mdc-card table-responsive">
             <div class="table-heading px-2 px-1 border-bottom">
-              <h1 class="mdc-card__title mdc-card__title--large">Published</h1>
+              <h1 class="mdc-card__title mdc-card__title--large">Published Articles</h1>
             </div>
             <table class="table">
               <thead>
                 <tr>
-                  <th class="text-left">Product</th>
-                  <th>Cost</th>
-                  <th>Sales amount</th>
-                  <th>Shipping cost</th>
-                  <th>Units sold</th>
-                  <th>Profit generated</th>
-                  <th>Left in stock</th>
-                  <th>Returns</th>
-                  <th>Actions</th>
+                  <th class="text-left">Image</th>
+                  <th class="text-left">Title</th>
+                  <th class="text-left">Link</th>
+                  <th class="text-left">Writer</th>
+                  <th class="text-left">Editor</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td class="text-left">T-shirts</td>
-                  <td>250</td>
-                  <td>300</td>
-                  <td>60</td>
-                  <td>3453</td>
-                  <td>76</td>
-                  <td>453643</td>
-                  <td>300</td>
-                  <td><div class="col mdc-button" data-mdc-auto-init="MDCRipple"><i class="mdi mdi-heart text-blue"></i></div><div class="col mdc-button" data-mdc-auto-init="MDCRipple"><i class="mdi mdi-forum text-yellow"></i></div><div class="col mdc-button" data-mdc-auto-init="MDCRipple"><i class="mdi mdi-delete text-red"></i></div></td>
-                </tr>
-                <tr>
-                  <td class="text-left">Baseball Hat</td>
-                  <td>457</td>
-                  <td>204</td>
-                  <td>35</td>
-                  <td>6754</td>
-                  <td>35</td>
-                  <td>345623</td>
-                  <td>546</td>
-                  <td><div class="col mdc-button" data-mdc-auto-init="MDCRipple"><i class="mdi mdi-heart text-blue"></i></div><div class="col mdc-button" data-mdc-auto-init="MDCRipple"><i class="mdi mdi-forum text-yellow"></i></div><div class="col mdc-button" data-mdc-auto-init="MDCRipple"><i class="mdi mdi-delete text-red"></i></div></td>
-                </tr>
-                <tr>
-                  <td class="text-left">Tennis Racket</td>
-                  <td>250</td>
-                  <td>350</td>
-                  <td>38</td>
-                  <td>3289</td>
-                  <td>45</td>
-                  <td>54662</td>
-                  <td>278</td>
-                  <td><div class="col mdc-button" data-mdc-auto-init="MDCRipple"><i class="mdi mdi-heart text-blue"></i></div><div class="col mdc-button" data-mdc-auto-init="MDCRipple"><i class="mdi mdi-forum text-yellow"></i></div><div class="col mdc-button" data-mdc-auto-init="MDCRipple"><i class="mdi mdi-delete text-red"></i></div></td>
-                </tr>
+                <template v-if="state.validation.isLoadingRecords">
+                  <tr>
+                    <td colspan="3" class="text-center"><h3>Loading...</h3></td>
+                  </tr>
+                </template>
+                <template v-else>
+                  <tr v-for="record in state.forPublishedRecords?.data" :key="record">
+                      <td class="text-left"><img :src="record?.image" width="30"/></td>
+                      <td class="text-left">{{ record?.title }}</td>
+                      <td class="text-left">{{ record?.link }}</td>
+                      <td class="text-left">{{ record?.writer?.firstname }} {{ record?.writer?.lastname }}</td>
+                      <td class="text-left">{{ record?.editor?.firstname }} {{ record?.editor?.lastname }}</td>
+                  </tr>
+                </template>
               </tbody>
             </table>
+            <the-pagination v-if="state.forPublishedRecords" :records="state.forPublishedRecords" :pagination="state.forPublishedPagination" @getRecords="getForPublishedRecords" @currentPage="currentPageForPubished"></the-pagination>
           </div>
         </div>
       </div>
