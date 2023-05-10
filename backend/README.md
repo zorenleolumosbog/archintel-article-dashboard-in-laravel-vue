@@ -1,3 +1,5 @@
+Install Composer on your computer
+
 ### Open the backend folder
 Copy .env.example file and rename it to .env
 
