@@ -1,3 +1,5 @@
+Install Nodejs on your computer
+
 #### Open the terminal in the root folder and run these commands to run the app
 ```
 npm install
