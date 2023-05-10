@@ -146,8 +146,13 @@ const handleFileIcon = (event: any) => {
     state.input.file.icon = file;
 }
 
-const store = () => {
-  state.validation.saving = true;
+const store = (status: string) => {
+  if(status === 'Published') {
+    state.validation.publishing = true;
+    state.input.status = 'Published';
+  } else {
+    state.validation.saving = true;
+  }
 
   const formData = new FormData();
   formData.append('company_id', state.input.companyId);
@@ -176,9 +181,10 @@ const store = () => {
   });
 };
 
-const update = (status = 'For Edit') => {
+const update = (status: string) => {
   if(status === 'Published') {
     state.validation.publishing = true;
+    state.input.status = 'Published';
   } else {
     state.validation.saving = true;
   }
@@ -190,7 +196,7 @@ const update = (status = 'For Edit') => {
   formData.append('link', state.input.link);
   formData.append('date', state.input.date);
   formData.append('content', state.input.content);
-  formData.append('status', status);
+  formData.append('status', state.input.status);
   if(state.input.file.icon) {
     formData.append('image', state.input.file.icon);
   }

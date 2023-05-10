@@ -31,7 +31,12 @@ const props = defineProps([
                             <template v-if="props.validation.saving">Saving...</template>
                             <template v-else>Save</template>
                         </button>
-                        <button v-show="authStore.currentUser?.type === 'Editor' && selectedRecord?.status === 'For Edit'" 
+                        <button v-show="authStore.currentUser?.type === 'Editor' && !selectedRecord"
+                        :disabled="props.validation.publishing" @click="$emit('store', 'Published')" type="button" class="mdc-button mdc-button--raised">
+                            <template v-if="props.validation.publishing">Publishing...</template>
+                            <template v-else>Publish</template>
+                        </button>
+                        <button v-show="authStore.currentUser?.type === 'Editor' && selectedRecord?.status === 'For Edit'"
                         :disabled="props.validation.publishing" @click="$emit('update', 'Published')" type="button" class="mdc-button mdc-button--raised">
                             <template v-if="props.validation.publishing">Publishing...</template>
                             <template v-else>Publish</template>

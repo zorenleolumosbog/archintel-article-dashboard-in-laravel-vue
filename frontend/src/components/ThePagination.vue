@@ -30,9 +30,9 @@ const getPageNumberFromURLParam = (val: any) => {
                 <div class="mdc-form-field pr-1">
                     <label class="mdc-text-field">
                         <select @change="$emit('getRecords')" v-model="props.pagination.limit" class="mdc-text-field__input pt-1">
-                            <option value="3">3</option>
-                            <option value="5">5</option>
                             <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
                             <option value="100">100</option>
                         </select>
                     </label>
