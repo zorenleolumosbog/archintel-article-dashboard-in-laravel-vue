@@ -39,16 +39,16 @@ const getPageNumberFromURLParam = (val: any) => {
                     <i class="mdc-drawer-arrow material-icons">keyboard_arrow_down</i>
                 </div>
                 <div class="mdc-form-field pr-1">
-                    {{ `${records.meta.current_page + "-" + records.meta.last_page }` }} of {{ records.meta.total }}
+                    {{ `${records?.meta.current_page + "-" + records?.meta.last_page }` }} of {{ records?.meta.total }}
                 </div>
                 <div class="mdc-form-field pr-1">
-                    <a v-if="records.links.prev" href="javascript:void(0)" @click="getPageNumberFromURLParam(records.links.prev)">
+                    <a v-if="records?.links.prev" href="javascript:void(0)" @click="getPageNumberFromURLParam(records?.links.prev)">
                         <i class="mdc-drawer-arrow material-icons">chevron_left</i>
                     </a>
                     <i v-else class="mdc-drawer-arrow material-icons">chevron_left</i>
                 </div>
                 <div class="mdc-form-field pr-1">
-                    <a v-if="records.links.next" href="javascript:void(0)" @click="getPageNumberFromURLParam(records.links.next)">
+                    <a v-if="records?.links.next" href="javascript:void(0)" @click="getPageNumberFromURLParam(records?.links.next)">
                         <i class="mdc-drawer-arrow material-icons">chevron_right</i>
                     </a>
                     <i v-else class="mdc-drawer-arrow material-icons">chevron_right</i>

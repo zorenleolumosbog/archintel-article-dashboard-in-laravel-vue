@@ -34,6 +34,7 @@ const state = reactive({
   validation: {
     showModal: false,
     saving: false,
+    isLoadingRecords: false,
     isSuccess: false,
     errors: []
   }
@@ -53,7 +54,7 @@ const currentPage = (val: number) => {
 };
 
 const getRecords = () => {
-  state.records = null;
+  state.validation.isLoadingRecords = true;
 
   axios.get(`${process.env.API_URL}/companies`, {
     headers: {
@@ -69,6 +70,7 @@ const getRecords = () => {
   })
   .then((response) => {
     state.records = response.data;
+    state.validation.isLoadingRecords = false;
   })
   .catch((error) => {
     router.push({name: 'dashboard'});
@@ -177,6 +179,7 @@ const clear = () => {
   state.validation = {
     showModal: false,
     saving: false,
+    isLoadingRecords: false,
     isSuccess: false,
     errors: []
   };
@@ -214,7 +217,12 @@ const clear = () => {
                 </tr>
               </thead>
               <tbody>
-                <template v-if="state.records">
+                <template v-if="state.validation.isLoadingRecords">
+                  <tr>
+                    <td colspan="3" class="text-center"><h3>Loading...</h3></td>
+                  </tr>
+                </template>
+                <template v-else>
                   <tr v-for="record in state.records?.data" :key="record">
                       <td class="text-left">
                         <div @click="edit(record?.id)" class="col mdc-button" data-mdc-auto-init="MDCRipple">
@@ -225,11 +233,6 @@ const clear = () => {
                       <td class="text-left">{{ record?.name }}</td>
                       <td class="text-left">{{ record?.status }}</td>
                       <td class="text-left">{{ hooks.useToLocaleDateString(record?.created_at).value }}</td>
-                  </tr>
-                </template>
-                <template v-else>
-                  <tr>
-                    <td colspan="3" class="text-center"><h3>Loading...</h3></td>
                   </tr>
                 </template>
               </tbody>

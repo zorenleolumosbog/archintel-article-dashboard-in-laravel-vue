@@ -311,7 +311,7 @@ const clear = () => {
                 </template>
               </tbody>
             </table>
-            <the-pagination :records="state.records" :pagination="state.pagination" @getRecords="getRecords" @currentPage="currentPage"></the-pagination>
+            <the-pagination v-if="state.records" :records="state.records" :pagination="state.pagination" @getRecords="getRecords" @currentPage="currentPage"></the-pagination>
           </div>
         </div>
       </div>
