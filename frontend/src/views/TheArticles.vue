@@ -42,6 +42,7 @@ const state = reactive({
     showModal: false,
     saving: false,
     publishing: false,
+    isLoadingRecords: false,
     isSuccess: false,
     errors: []
   }
@@ -70,8 +71,13 @@ const generageLink = useDebounceFn(() => {
 
 }, 1000);
 
+const currentPage = (val: number) => {
+    state.pagination.current = val;
+    getRecords();
+};
+
 const getRecords = () => {
-  state.records = null;
+  state.validation.isLoadingRecords = true;
 
   axios.get(`${process.env.API_URL}/articles`, {
     headers: {
@@ -87,6 +93,7 @@ const getRecords = () => {
   })
   .then((response) => {
     state.records = response.data;
+    state.validation.isLoadingRecords = false;
   })
   .catch((error) => {
     router.push({name: 'dashboard'});
@@ -233,6 +240,7 @@ const clear = () => {
     showModal: false,
     saving: false,
     publishing: false,
+    isLoadingRecords: false,
     isSuccess: false,
     errors: []
   };
@@ -273,7 +281,12 @@ const clear = () => {
                 </tr>
               </thead>
               <tbody>
-                <template v-if="state.records">
+                <template v-if="state.validation.isLoadingRecords">
+                  <tr>
+                    <td colspan="5" class="text-center"><h3>Loading...</h3></td>
+                  </tr>
+                </template>
+                <template v-else>
                   <tr v-for="record in state.records?.data" :key="record">
                       <td class="text-left">
                         <template v-if="authStore.currentUser.type === 'Writer' && record?.status === 'For Edit'">
@@ -296,14 +309,9 @@ const clear = () => {
                       <td class="text-left">{{ hooks.useToLocaleDateString(record?.created_at).value }}</td>
                   </tr>
                 </template>
-                <template v-else>
-                  <tr>
-                    <td colspan="5" class="text-center"><h3>Loading...</h3></td>
-                  </tr>
-                </template>
               </tbody>
             </table>
-            <the-pagination></the-pagination>
+            <the-pagination :records="state.records" :pagination="state.pagination" @getRecords="getRecords" @currentPage="currentPage"></the-pagination>
           </div>
         </div>
       </div>

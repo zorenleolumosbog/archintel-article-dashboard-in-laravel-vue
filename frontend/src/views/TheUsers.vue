@@ -48,6 +48,11 @@ const debouncedRecords = useDebounceFn(() => {
   getRecords();
 }, 1000);
 
+const currentPage = (val: number) => {
+    state.pagination.current = val;
+    getRecords();
+};
+
 const getRecords = () => {
   state.records = null;
 
@@ -233,7 +238,7 @@ const clear = () => {
                 </template>
               </tbody>
             </table>
-            <the-pagination></the-pagination>
+            <the-pagination v-if="state.records" :records="state.records" :pagination="state.pagination" @getRecords="getRecords" @currentPage="currentPage"></the-pagination>
           </div>
         </div>
       </div>
