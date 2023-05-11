@@ -25,7 +25,7 @@ const redirectToRegister = () => {
 
 const debouncedDashboard = useDebounceFn(() => {
   window.location.href = "/dashboard";
-}, 500);
+}, 1000);
 
 const login = () => {
   state.validation.loading = true;

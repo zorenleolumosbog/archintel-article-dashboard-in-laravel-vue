@@ -23,7 +23,7 @@ class CompanyRequest extends FormRequest
     {
         if (request()->method() === 'POST') {
             return [
-                'logo' => 'required|image|mimes:jpg,jpeg,png|max:10240', // limit 10mb
+                'logo' => 'required|image|mimes:jpg,jpeg,png|max:3072', // limit 3mb
                 'name' => 'required|max:255',
                 'status' => 'required|in:Active,Inactive',
             ];
@@ -31,7 +31,7 @@ class CompanyRequest extends FormRequest
 
         if (request()->method() === 'PUT' || request()->method() === 'PATCH') {
             return [
-                'logo' => 'sometimes|required|image|mimes:jpg,jpeg,png|max:10240', // limit 10mb
+                'logo' => 'sometimes|required|image|mimes:jpg,jpeg,png|max:3072', // limit 3mb
                 'name' => 'sometimes|required|max:255',
                 'status' => 'sometimes|required|in:Active,Inactive',
             ];

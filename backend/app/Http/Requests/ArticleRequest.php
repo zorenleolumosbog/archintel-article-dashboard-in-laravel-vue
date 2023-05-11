@@ -37,7 +37,7 @@ class ArticleRequest extends FormRequest
                     }),
                 ],
                 'company_id' => 'required|exists:companies,id',
-                'image' => 'required|image|mimes:jpg,jpeg,png|max:15360', // limit 15mb
+                'image' => 'required|image|mimes:jpg,jpeg,png|max:3072', // limit 3mb
                 'title' => 'required|unique:articles,title|max:255',
                 'link' => 'required|unique:articles,link|max:255',
                 'date' => 'required|date',
@@ -49,7 +49,7 @@ class ArticleRequest extends FormRequest
         if (request()->method() === 'PUT' || request()->method() === 'PATCH') {
             return [
                 'company_id' => 'sometimes|required|exists:companies,id',
-                'image' => 'sometimes|required|image|mimes:jpg,jpeg,png|max:15360', // limit 15mb
+                'image' => 'sometimes|required|image|mimes:jpg,jpeg,png|max:3072', // limit 3mb
                 'title' => 'sometimes|required|max:255|unique:articles,title,' . $this->route('article')->id,
                 'link' => 'sometimes|required|max:255|unique:articles,link,' . $this->route('article')->id,
                 'date' => 'sometimes|required|date',
