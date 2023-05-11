@@ -1,5 +1,5 @@
 ## Requirements
-Git is required to clone this repo or just down directly the zip file
+Git is required to clone this repo or just download directly the zip file
 
 XAMPP is required to install PHP and MySQL
 
