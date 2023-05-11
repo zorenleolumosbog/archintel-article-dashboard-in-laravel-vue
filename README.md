@@ -5,7 +5,7 @@ XAMPP is required to install PHP and MySQL
 
 Composer is required to install Laravel dependencies
 
-Nodejs is required to run the vuejs
+Nodejs is required to run the Vuejs
 
 #### Run this command to your terminal to clone the repo
 ```
