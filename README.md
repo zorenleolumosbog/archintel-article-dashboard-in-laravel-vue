@@ -1,11 +1,11 @@
 ## Requirements
-Git is required
+Git is required to clone this repo or just down directly the zip file
 
-XAMPP is required
+XAMPP is required to install PHP and MySQL
 
-Composer is required
+Composer is required to install Laravel dependencies
 
-Nodejs is required
+Nodejs is required to run the vuejs
 
 #### Run this command to your terminal to clone the repo
 ```
