@@ -36,6 +36,11 @@ const logout = () => {
           </section>
           <section class="mdc-toolbar__section mdc-toolbar__section--align-end" role="toolbar">
             <div class="mdc-menu-anchor">
+              <RouterLink to="/dashboard" class="mdc-toolbar__icon mdc-ripple-surface" data-mdc-auto-init="MDCRipple">
+                <i class="material-icons">dvr</i>
+              </RouterLink>
+            </div>
+            <div class="mdc-menu-anchor">
               <a href="javascript:void(0)" class="mdc-toolbar__icon toggle mdc-ripple-surface" data-toggle="dropdown" toggle-dropdown="notification-menu" data-mdc-auto-init="MDCRipple">
                 <i class="material-icons">notifications</i>
                 <span class="dropdown-count">3</span>
